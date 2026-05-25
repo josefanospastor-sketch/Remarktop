@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no" />
+<meta name="theme-color" content="#0b0b10" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="RemarkTop" />
+<meta name="description" content="RemarkTop — Recupere vendas perdidas com remarketing inteligente." />
+<link rel="manifest" href="/manifest.json" />
+<link rel="apple-touch-icon" href="/icon-192.png" />
+<link rel="icon" href="/icon-192.png" />
+<title>RemarkTop — Recupere vendas perdidas</title>
+<style>
+/* ===================== RemarkTop — Design System ===================== */
+:root{
+  --bg:#f6f6f8;
+  --bg-elev:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#f1f1f5;
+  --text:#0b0b10;
+  --text-2:#5a5a6b;
+  --text-3:#9094a3;
+  --border:rgba(10,10,20,.08);
+  --border-strong:rgba(10,10,20,.14);
+  --primary:#5b5cf6;
+  --primary-2:#22d3ee;
+  --grad:linear-gradient(135deg,#5b5cf6 0%,#22d3ee 100%);
+  --success:#16a34a;
+  --whats:#25d366;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --hot:#ff5a3c;
+  --shadow-sm:0 1px 2px rgba(10,10,20,.05);
+  --shadow:0 8px 24px rgba(10,10,20,.06),0 2px 6px rgba(10,10,20,.04);
+  --shadow-lg:0 20px 50px rgba(10,10,20,.12);
+  --r-sm:10px; --r:14px; --r-lg:20px; --r-xl:28px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --nav-h:72px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b10;
+  --bg-elev:#14141c;
+  --surface:#15151f;
+  --surface-2:#1d1d28;
+  --text:#f5f5f8;
+  --text-2:#a8acbb;
+  --text-3:#6d7186;
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.14);
+  --shadow:0 8px 24px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3);
+  --shadow-lg:0 20px 50px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',system-ui,sans-serif;
+  font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+input,textarea,select,button{font-family:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer;padding:0}
+a{color:var(--primary);text-decoration:none}
+
+/* ===================== App shell ===================== */
+#app{min-height:100%;padding-top:calc(var(--safe-top) + 8px);padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px)}
+.view{display:none;padding:0 18px;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 4px 18px}
+.header h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.header .sub{font-size:13px;color:var(--text-2);margin-top:2px}
+.header .actions{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:50%;background:var(--surface);display:grid;place-items:center;
+  box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+
+/* ===================== Bottom nav ===================== */
+.nav{position:fixed;left:0;right:0;bottom:0;height:calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);background:color-mix(in srgb,var(--bg-elev) 86%,transparent);
+  backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);display:flex;z-index:50}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;color:var(--text-3);font-size:10.5px;font-weight:500;letter-spacing:.01em;transition:color .2s}
+.nav button.active{color:var(--primary)}
+.nav button svg{width:22px;height:22px;stroke-width:1.8}
+
+/* ===================== Cards ===================== */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:16px;box-shadow:var(--shadow-sm);transition:transform .15s, box-shadow .2s}
+.card:active{transform:scale(.98)}
+.kpi{cursor:pointer}
+.kpi .label{font-size:11.5px;color:var(--text-2);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.kpi .value{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-top:6px;word-break:break-word;overflow-wrap:break-word;max-width:100%}
+.kpi .meta{font-size:11.5px;color:var(--text-3);margin-top:2px}
+.kpi.accent{background:var(--grad);color:#fff;border:none}
+.kpi.accent .label,.kpi.accent .meta{color:rgba(255,255,255,.85)}
+.kpi.hot{background:linear-gradient(135deg,#ff5a3c,#ff8c3c);color:#fff;border:none}
+.kpi.hot .label,.kpi.hot .meta{color:rgba(255,255,255,.9)}
+.kpi.success{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border:none}
+.kpi.success .label,.kpi.success .meta{color:rgba(255,255,255,.9)}
+
+.section-title{font-size:13px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em;
+  margin:22px 4px 10px;display:flex;align-items:center;justify-content:space-between}
+
+/* ===================== Customer card ===================== */
+.client{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);cursor:pointer}
+.client .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.client .name{font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+.client .product{font-size:12.5px;color:var(--text-2);margin-top:2px}
+.client .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;
+  background:var(--surface-2);color:var(--text-2);display:inline-flex;align-items:center;gap:4px}
+.tag.hot{background:rgba(255,90,60,.12);color:#ff5a3c}
+.tag.warn{background:rgba(245,158,11,.14);color:#b45309}
+.tag.ok{background:rgba(22,163,74,.12);color:#16a34a}
+.tag.cool{background:rgba(91,92,246,.12);color:#5b5cf6}
+.client .actions{display:flex;gap:8px;margin-top:12px}
+.btn{flex:1;height:40px;border-radius:12px;font-weight:600;font-size:13.5px;display:flex;
+  align-items:center;justify-content:center;gap:6px;transition:transform .1s,opacity .2s;cursor:pointer}
+.btn:active{transform:scale(.97)}
+.btn-whats{background:var(--whats);color:#fff}
+.btn-ghost{background:var(--surface-2);color:var(--text)}
+.btn-primary{background:var(--grad);color:#fff}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--danger)}
+
+.score-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;
+  font-size:12px;font-weight:700;background:var(--surface-2);color:var(--text)}
+.score-pill .dot{width:8px;height:8px;border-radius:50%}
+
+/* ===================== Forms ===================== */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:6px;letter-spacing:.01em}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 18%,transparent)}
+.field textarea{min-height:96px;resize:vertical}
+.field .hint{font-size:11.5px;color:var(--text-3);margin-top:4px}
+.slider-wrap{display:flex;align-items:center;gap:12px}
+.slider-wrap input[type=range]{flex:1;accent-color:var(--primary)}
+.slider-val{min-width:36px;text-align:center;font-weight:700;font-size:16px;color:var(--primary)}
+
+.seg{display:flex;background:var(--surface-2);padding:4px;border-radius:12px;gap:4px}
+.seg button{flex:1;height:36px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--text-2);cursor:pointer;transition:all .15s}
+.seg button.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* ===================== Commission input wrapper ===================== */
+.commission-input-wrap{position:relative;display:flex;align-items:center}
+.commission-input-wrap::after{content:'%';position:absolute;right:14px;font-weight:600;color:var(--text-2);pointer-events:none}
+.commission-input-wrap input{padding-right:32px}
+
+/* ===================== Search & filters ===================== */
+.search{position:relative;margin-bottom:12px}
+.search input{width:100%;padding:12px 14px 12px 42px;border-radius:14px;background:var(--surface);
+  border:1px solid var(--border);font-size:14.5px}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-3)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:8px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--border);
+  font-size:13px;font-weight:600;color:var(--text-2);white-space:nowrap;transition:all .15s;cursor:pointer}
+.chip.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+/* ===================== Modal / sheet ===================== */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+.sheet-bg.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:92vh;background:var(--bg-elev);
+  border-radius:24px 24px 0 0;z-index:101;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;padding-bottom:calc(var(--safe-bottom) + 16px)}
+.sheet.open{transform:translateY(0)}
+.sheet .handle{width:38px;height:5px;border-radius:3px;background:var(--border-strong);margin:10px auto 4px}
+.sheet header{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 8px}
+.sheet header h2{margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+.sheet .body{padding:6px 18px 12px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.sheet .footer{padding:12px 18px 0;border-top:1px solid var(--border);display:flex;gap:10px}
+
+/* ===================== Empty / toast ===================== */
+.empty{text-align:center;padding:50px 20px;color:var(--text-3)}
+.empty svg{margin-bottom:10px;opacity:.6}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + var(--safe-bottom) + 20px);
+  transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 20px;
+  border-radius:999px;font-size:13.5px;font-weight:600;z-index:200;opacity:0;
+  pointer-events:none;transition:all .25s;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===================== FAB ===================== */
+.fab{position:fixed;right:18px;bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);
+  width:56px;height:56px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;
+  box-shadow:0 12px 30px color-mix(in srgb,var(--primary) 45%,transparent);z-index:40;
+  transition:transform .15s;cursor:pointer}
+.fab:active{transform:scale(.92)}
+.fab svg{width:26px;height:26px;stroke-width:2.2}
+
+/* ===================== Misc ===================== */
+.row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:none}
+.row .lbl{font-weight:500}
+.row .val{color:var(--text-2);font-size:13px}
+.list-link{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;margin-bottom:8px;font-weight:500;cursor:pointer}
+.editable-list .item{display:flex;align-items:center;gap:8px;background:var(--surface-2);
+  padding:8px 12px;border-radius:10px;margin-bottom:6px}
+.editable-list .item span{flex:1;font-size:14px}
+.editable-list .item button{color:var(--danger);font-size:18px;line-height:1;padding:4px;cursor:pointer}
+.template-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px;margin-bottom:10px}
+.template-card .ttitle{font-weight:600;margin-bottom:6px}
+.template-card .tbody{font-size:13px;color:var(--text-2);white-space:pre-wrap;line-height:1.45}
+.template-card .tactions{display:flex;gap:8px;margin-top:10px}
+.template-card .tactions .btn{height:34px;font-size:12.5px}
+
+.detail-section{margin-top:18px}
+.detail-section h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin:0 0 8px}
+
+.export-buttons{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.export-buttons .btn{height:auto;padding:10px}
+.btn-attention-big{width:100%;background:linear-gradient(135deg,#ff8c3c,#ff5a3c);color:#fff;font-weight:700;font-size:16px;padding:18px 16px;border-radius:var(--r-lg);box-shadow:0 10px 28px rgba(255,90,60,.38);margin:6px 0 10px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;line-height:1.25}
+.btn-attention-big:active{transform:scale(.99)}
+.btn-almost-big{width:100%;background:linear-gradient(135deg,#5b5cf6,#22d3ee);color:#fff;font-weight:700;font-size:15px;padding:14px 16px;border-radius:var(--r-lg);box-shadow:0 8px 22px rgba(91,92,246,.32);margin:0 0 14px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn-almost-big:active{transform:scale(.99)}
+.timeline{list-style:none;padding:0;margin:6px 0 0}
+.timeline li{position:relative;padding:6px 0 10px 18px;border-left:2px solid var(--border);margin-left:6px;font-size:13px;color:var(--text-2)}
+.timeline li::before{content:"";position:absolute;left:-7px;top:10px;width:12px;height:12px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--surface)}
+.timeline li strong{color:var(--text);margin-right:6px;font-weight:600}
+.timeline li .tdate{display:inline-block;min-width:54px;color:var(--text-3);font-variant-numeric:tabular-nums;margin-right:8px}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Dashboard -->
+  <section class="view active" data-view="dashboard">
+    <header class="header">
+      <div>
+        <h1>Olá 👋</h1>
+        <div class="sub" id="dashSub">Recupere vendas perdidas hoje.</div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Tema">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+    <button class="btn-attention-big" id="btnAttention12">🔥 12 Clientes que precisam da sua atenção hoje!</button>
+    <button class="btn-almost-big" id="btnQuaseFechando">⭐ Quase Fechando — Top 10 maior interesse</button>
+    <div class="grid" id="dashGrid"></div>
+    <div class="section-title">Resumo de vendas recuperadas</div>
+    <div id="dashSalesResume"></div>
+    <div class="section-title">Precisam de você hoje</div>
+    <div id="dashAttention"></div>
+  </section>
+
+  <!-- Clientes -->
+  <section class="view" data-view="clientes">
+    <header class="header">
+      <div><h1>Clientes</h1><div class="sub" id="clientCount">0 cadastrados</div></div>
+      <div class="actions"><button class="icon-btn" id="openAdv" aria-label="Filtro avançado">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      </button></div>
+    </header>
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" placeholder="Buscar cliente, produto..." />
+    </div>
+    <div class="chips" id="chipsFilter">
+      <button class="chip active" data-filter="all">Todos</button>
+      <button class="chip" data-filter="hot">🔥 Alta</button>
+      <button class="chip" data-filter="mid">⚠️ Média</button>
+      <button class="chip" data-filter="low">🟢 Baixa</button>
+      <button class="chip" data-filter="d1">1d após visita</button>
+      <button class="chip" data-filter="d7">7+ dias</button>
+      <button class="chip" data-filter="d14">14+ dias</button>
+      <button class="chip" data-filter="d30">30+ dias</button>
+      <button class="chip" data-filter="comprou">✅ Comprou</button>
+    </div>
+    <div id="clientList"></div>
+  </section>
+
+  <!-- Remarketing -->
+  <section class="view" data-view="remarketing">
+    <header class="header"><div><h1>Remarketing</h1><div class="sub">Mensagem inteligente em 1 toque.</div></div></header>
+    <div class="card" style="margin-bottom:14px">
+      <div class="field" style="margin:0">
+        <label>Cliente selecionado</label>
+        <select id="rmClient"><option value="">Escolher cliente...</option></select>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="field" style="margin:0">
+        <label>Mensagem padrão (use {nome}, {produto}, {dias}, {score})</label>
+        <textarea id="rmMsg"></textarea>
+        <div class="hint">Salva automaticamente. Personaliza ao enviar.</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-ghost" id="rmSave">Salvar padrão</button>
+        <button class="btn btn-whats" id="rmSend">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.6 5.9L0 24l6.4-1.7c1.7.9 3.6 1.4 5.6 1.4 6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.4-8.3zM12 21.7c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.7 9.7 0 0 1-1.5-5.2c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8z"/></svg>
+          Enviar no WhatsApp
+        </button>
+      </div>
+    </div>
+    <div class="section-title">Templates rápidos <button class="chip" id="addTemplate" style="padding:6px 12px;font-size:12px">+ Novo</button></div>
+    <div id="templatesList"></div>
+  </section>
+
+  <!-- Contatos (Nova aba) -->
+  <section class="view" data-view="contatos">
+    <header class="header"><div><h1>Contatos</h1><div class="sub">Gerencie não-compradores.</div></div></header>
+    <div class="export-buttons">
+      <button class="btn btn-primary" id="exportInteresse">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar por Interesse
+      </button>
+      <button class="btn btn-primary" id="exportUrgencia">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar por Urgência
+      </button>
+      <button class="btn btn-primary" id="exportTipo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar por Tipo
+      </button>
+      <button class="btn btn-primary" id="exportClassificacao">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar por Classificação
+      </button>
+    </div>
+    <div id="contatosList"></div>
+  </section>
+
+  <!-- Configurações -->
+  <section class="view" data-view="config">
+    <header class="header"><div><h1>Configurações</h1><div class="sub">Personalize seu RemarkTop.</div></div></header>
+    <div class="card">
+      <div class="field"><label>Nome da empresa</label><input id="cfgCompany" placeholder="Sua empresa" /></div>
+      <div class="field" style="margin:0">
+        <label>Tema</label>
+        <div class="seg" id="cfgTheme"><button data-t="light">Claro</button><button data-t="dark">Escuro</button></div>
+      </div>
+    </div>
+    <div class="section-title">Mensagem padrão de remarketing</div>
+    <div class="card"><div class="field" style="margin:0"><textarea id="cfgMsg"></textarea></div></div>
+
+    <div class="section-title">Formas de compra <button class="chip" data-add="formaCompra" style="padding:6px 12px;font-size:12px">+ Adicionar</button></div>
+    <div class="card editable-list" id="listFormaCompra"></div>
+
+    <div class="section-title">Objeções <button class="chip" data-add="objecao" style="padding:6px 12px;font-size:12px">+ Adicionar</button></div>
+    <div class="card editable-list" id="listObjecao"></div>
+
+    <div class="section-title">Tipos de Imóvel <button class="chip" data-add="tipo" style="padding:6px 12px;font-size:12px">+ Adicionar</button></div>
+    <div class="card editable-list" id="listTipo"></div>
+
+    <div class="section-title">Classificação do Imóvel <button class="chip" data-add="classificacao" style="padding:6px 12px;font-size:12px">+ Adicionar</button></div>
+    <div class="card editable-list" id="listClassificacao"></div>
+
+    <div class="section-title">Backup</div>
+    <button class="list-link" id="btnExport">Exportar backup (JSON) <span>↓</span></button>
+    <button class="list-link" id="btnImport">Importar backup <span>↑</span></button>
+    <input type="file" id="fileImport" accept="application/json" hidden />
+    <button class="list-link" id="btnClear" style="color:var(--danger)">Limpar todos os dados <span>⚠️</span></button>
+
+    <div style="text-align:center;color:var(--text-3);font-size:11px;margin-top:30px">RemarkTop · v1.0 · 100% offline</div>
+  </section>
+</div>
+
+<!-- Bottom nav -->
+<nav class="nav" id="nav">
+  <button data-go="dashboard" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+    Dashboard
+  </button>
+  <button data-go="clientes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/><circle cx="17" cy="6" r="3"/><path d="M22 18c0-2.8-2.2-5-5-5"/></svg>
+    Clientes
+  </button>
+  <button data-go="remarketing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>
+    Remarketing
+  </button>
+  <button data-go="contatos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Contatos
+  </button>
+  <button data-go="config">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    Config
+  </button>
+</nav>
+
+<!-- FAB -->
+<button class="fab" id="fab" aria-label="Novo cliente">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<!-- Sheet -->
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet">
+  <div class="handle"></div>
+  <header><h2 id="sheetTitle">Título</h2><button class="icon-btn" id="sheetClose">✕</button></header>
+  <div class="body" id="sheetBody"></div>
+  <div class="footer" id="sheetFooter" style="display:none"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== RemarkTop · script.js ===================== */
+'use strict';
+
+const LS = {
+  clients: 'rt_clients',
+  templates: 'rt_templates',
+  config: 'rt_config',
+  formas: 'rt_formas',
+  objecoes: 'rt_objecoes',
+  tipo: 'rt_tipo',
+  classificacao: 'rt_classificacao',
+};
+
+const DEFAULTS = {
+  config: {
+    company: '',
+    theme: 'light',
+    msg: `Olá {nome}, tudo bem? 😊\n\nLembrei do que você comentou sobre {produto}.\nQueria te mostrar uma oportunidade que talvez faça sentido para você.\n\nPosso te enviar um vídeo rápido?`,
+  },
+  formas: ['À vista','Entrada + parcelado','Financiamento bancário','Sem definição','Dependente de venda','Baixo orçamento'],
+  objecoes: ['Achou caro','Vai pensar','Sem dinheiro agora','Comparando opções','Quer desconto','Sem urgência','Dependente do cônjuge','Financiamento','Sumiu'],
+  tipo: ['Apartamento','Casa Terrea','Chacara','Sitio','Fazenda','KitNet'],
+  classificacao: ['Alto Padrao','Medio Padrao','Baixo Padrao'],
+  templates: [
+    { id:'t1', title:'Cliente sumiu', body:'Oi {nome}! Sumiu por aqui 👀\nLembrei de você quando vi uma novidade sobre {produto}. Posso te chamar?' },
+    { id:'t2', title:'Cliente indeciso', body:'Olá {nome}, tudo certo? Sei que ficou na dúvida sobre {produto}. Posso te ajudar a destravar isso hoje?' },
+    { id:'t3', title:'Achou caro', body:'Oi {nome}! Pensei numa condição especial pra {produto} que pode resolver o que conversamos. Posso te mostrar?' },
+    { id:'t4', title:'Vai pensar', body:'Olá {nome}! Já se passaram {dias} dias 🙂 Quer que eu te mande um resumo rápido sobre {produto} pra ajudar na decisão?' },
+    { id:'t5', title:'Reativação 30 dias', body:'Oi {nome}! Faz um tempinho desde nossa última conversa sobre {produto}. Posso te atualizar com novidades?' },
+    { id:'t6', title:'Última tentativa', body:'Olá {nome}, vou te dar uma última cartada com algo especial sobre {produto}. Topa ver?' },
+    { id:'t7', title:'1 dia após visita', body:'Olá {nome}, tudo bom? Vamos realizar sua aquisição?' },
+  ],
+};
+
+const URGENCIAS = ['alta','média','baixa'];
+const TEMPERATURA = ['🟢 Engajado','🟡 Indeciso','🔴 Distante'];
+const STATUS_VENDA = ['Não comprou','Comprou'];
+
+/* ===================== Storage ===================== */
+const load = (k, fallback) => {
+  try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }
+  catch(e){ return fallback; }
+};
+const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+let clients   = load(LS.clients, []);
+let templates = load(LS.templates, DEFAULTS.templates);
+let config    = { ...DEFAULTS.config, ...load(LS.config, {}) };
+let formas    = load(LS.formas, DEFAULTS.formas);
+let objecoes  = load(LS.objecoes, DEFAULTS.objecoes);
+let tipo      = load(LS.tipo, DEFAULTS.tipo);
+let classificacao = load(LS.classificacao, DEFAULTS.classificacao);
+
+/* ===================== Helpers ===================== */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => [...document.querySelectorAll(sel)];
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
+const today = () => new Date().toISOString();
+const daysSince = iso => iso ? Math.floor((Date.now() - new Date(iso).getTime())/86400000) : 999;
+const escapeHtml = s => String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ===================== Score ===================== */
+function scoreClient(c){
+  let s = 0;
+  s += (Number(c.interesse)||5) * 6;
+  const tempMap = {'🟢 Engajado':18,'🟡 Indeciso':10,'🔴 Distante':3};
+  s += tempMap[c.temperatura] ?? 8;
+  const formaMap = {'À vista':10,'Entrada + parcelado':8,'Financiamento bancário':6,'Sem definição':4,'Dependente de venda':3,'Baixo orçamento':2};
+  s += formaMap[c.formaCompra] ?? 4;
+  const objPenalty = {'Achou caro':-5,'Vai pensar':-3,'Sem dinheiro agora':-7,'Comparando opções':-2,'Quer desconto':-2,'Sem urgência':-6,'Dependente do cônjuge':-4,'Financiamento':-2,'Sumiu':-8};
+  s += objPenalty[c.objecao] ?? 0;
+  const d = daysSince(c.ultimoContato || c.dataCadastro);
+  if (d >= 30) s -= 15; else if (d >= 14) s -= 8; else if (d >= 7) s -= 4;
+  const urgBonus = {'alta':10,'média':4,'baixa':0};
+  s += urgBonus[c.urgencia] ?? 0;
+  return Math.max(0, Math.min(100, Math.round(s)));
+}
+function scoreClass(s){
+  if (s >= 86) return {label:'Muito quente', color:'#ff3b30', tag:'hot'};
+  if (s >= 66) return {label:'Quente',       color:'#ff8c3c', tag:'hot'};
+  if (s >= 36) return {label:'Morno',        color:'#f59e0b', tag:'warn'};
+  return                {label:'Frio',         color:'#5b8def', tag:'cool'};
+}
+function recommend(c){
+  const s = scoreClient(c), d = daysSince(c.ultimoContato || c.dataCadastro);
+  if (c.statusVenda === 'Comprou') return '✅ Venda fechada';
+  if (s >= 86) return '🔥 Fale com esse cliente hoje';
+  if (s >= 66) return '💪 Forte chance de fechamento';
+  if (d >= 30) return '⏰ Hora de reativar';
+  if (d >= 14) return '⚠️ Lead esfriando';
+  if (s < 36)  return '🥶 Lead frio — nutrição leve';
+  return '📞 Faça um follow-up';
+}
+function priorityLevel(c){
+  if (c.urgencia === 'alta') return 'hot';
+  const s = scoreClient(c);
+  if (s >= 66) return 'hot';
+  if (s >= 36) return 'mid';
+  return 'low';
+}
+
+/* ===================== Navigation ===================== */
+function go(view){
+  $$('.view').forEach(v => v.classList.toggle('active', v.dataset.view === view));
+  $$('.nav button').forEach(b => b.classList.toggle('active', b.dataset.go === view));
+  if (view === 'dashboard') renderDashboard();
+  if (view === 'clientes')  renderClients();
+  if (view === 'remarketing') renderRemarketing();
+  if (view === 'contatos') renderContatos();
+  if (view === 'config')    renderConfig();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+$$('.nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+
+/* ===================== Sheet ===================== */
+function openSheet(title, bodyHtml, footerHtml = ''){
+  $('#sheetTitle').textContent = title;
+  $('#sheetBody').innerHTML = bodyHtml;
+  const f = $('#sheetFooter');
+  f.innerHTML = footerHtml;
+  f.style.display = footerHtml ? 'flex' : 'none';
+  $('#sheet').classList.add('open');
+  $('#sheetBg').classList.add('open');
+}
+function closeSheet(){ $('#sheet').classList.remove('open'); $('#sheetBg').classList.remove('open'); }
+$('#sheetBg').addEventListener('click', closeSheet);
+$('#sheetClose').addEventListener('click', closeSheet);
+
+/* ===================== Dashboard ===================== */
+function renderDashboard(){
+  const total = clients.length;
+  const quentes  = clients.filter(c => scoreClient(c) >= 66 && c.statusVenda !== 'Comprou').length;
+  const d7  = clients.filter(c => daysSince(c.ultimoContato||c.dataCadastro) >= 7  && c.statusVenda !== 'Comprou').length;
+  const d14 = clients.filter(c => daysSince(c.ultimoContato||c.dataCadastro) >= 14 && c.statusVenda !== 'Comprou').length;
+  const d30 = clients.filter(c => daysSince(c.ultimoContato||c.dataCadastro) >= 30 && c.statusVenda !== 'Comprou').length;
+  const prioHoje = clients.filter(c => priorityLevel(c) === 'hot' && c.statusVenda !== 'Comprou').length;
+  const altaUrg  = clients.filter(c => c.urgencia === 'alta' && c.statusVenda !== 'Comprou').length;
+  const comprou  = clients.filter(c => c.statusVenda === 'Comprou');
+  const vgvTotal = comprou.reduce((a,c) => a + (Number(c.vgv)||0), 0);
+  const comissaoTotal = comprou.reduce((a,c) => a + ((Number(c.vgv)||0) * (Number(c.comissaoPercentual)||0) / 100), 0);
+  const fmtBRL = n => n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+  $('#dashSub').textContent = config.company ? `${config.company} · ${total} leads` : `${total} leads no funil`;
+
+  const d1 = clients.filter(c => daysSince(c.ultimoContato||c.dataCadastro) === 1 && c.statusVenda !== 'Comprou').length;
+
+  const interesseAlto = clients.filter(c => (Number(c.interesse)||0) >= 8 && c.statusVenda !== 'Comprou').length;
+  $('#dashGrid').innerHTML = `
+    ${kpi('hot','🔥 Alta urgência', altaUrg, 'Toque para ver', 'urg-alta')}
+    ${kpi('accent','Interesse alto', interesseAlto, 'Maior interesse no topo', 'interesse-alto')}
+    ${kpi('accent','Prioritários hoje', prioHoje, 'Score alto', 'prio')}
+    ${kpi('','Clientes quentes', quentes, 'Score 66+', 'quentes')}
+    ${kpi('','Total de leads', total, 'Cadastrados', 'all')}
+    ${kpi('accent','1d após visita', d1, 'Não compradores', 'd1')}
+    ${kpi('','Sem contato 7d+', d7, 'Reativar', 'd7')}
+    ${kpi('','Sem contato 14d+', d14, 'Atenção', 'd14')}
+    ${kpi('','Sem contato 30d+', d30, 'Urgente', 'd30')}
+    ${kpi('success','Vendas recuperadas', comprou.length, fmtBRL(vgvTotal), 'comprou')}
+  `;
+  $$('#dashGrid .kpi').forEach(el => el.addEventListener('click', () => {
+    const f = el.dataset.k;
+    pendingFilter = f;
+    go('clientes');
+  }));
+
+  const _btn12 = $('#btnAttention12');
+  if (_btn12 && !_btn12.dataset.bound){
+    _btn12.dataset.bound = '1';
+    _btn12.addEventListener('click', () => {
+      const naoComp = clients.filter(c => c.statusVenda !== 'Comprou');
+      if (!naoComp.length) return toast('Nenhum cliente não-comprador');
+      const ranked = [...naoComp].sort((a,b) => {
+        const ua = a.urgencia==='alta'?1:0, ub = b.urgencia==='alta'?1:0;
+        if (ua !== ub) return ub - ua;
+        return scoreClient(b) - scoreClient(a);
+      });
+      const pool = ranked.slice(0, Math.min(24, ranked.length));
+      for (let i = pool.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      pendingClientIds = pool.slice(0, 12).map(c => c.id);
+      go('clientes');
+    });
+  }
+  const _btnQF = $('#btnQuaseFechando');
+  if (_btnQF && !_btnQF.dataset.bound){
+    _btnQF.dataset.bound = '1';
+    _btnQF.addEventListener('click', () => {
+      const naoComp = clients.filter(c => c.statusVenda !== 'Comprou');
+      if (!naoComp.length) return toast('Nenhum cliente não-comprador');
+      const sorted = [...naoComp].sort((a,b) => (Number(b.interesse)||0) - (Number(a.interesse)||0));
+      pendingClientIds = sorted.slice(0, 10).map(c => c.id);
+      go('clientes');
+    });
+  }
+
+  const formatValue = (n) => {
+    const str = fmtBRL(n);
+    if (str.length > 18) return `<span style="font-size:20px">${str}</span>`;
+    if (str.length > 15) return `<span style="font-size:24px">${str}</span>`;
+    return str;
+  };
+  $('#dashSalesResume').innerHTML = `
+    <div class="grid">
+      <div class="card">
+        <div class="kpi">
+          <div class="label">Total VGV</div>
+          <div class="value" style="font-size:clamp(18px, 5vw, 28px)">${formatValue(vgvTotal)}</div>
+          <div class="meta">Valor total de vendas</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="kpi">
+          <div class="label">Comissão total</div>
+          <div class="value" style="font-size:clamp(18px, 5vw, 28px)">${formatValue(comissaoTotal)}</div>
+          <div class="meta">Soma das comissões</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const list = [...clients]
+    .filter(c => c.statusVenda !== 'Comprou')
+    .sort((a,b) => (b.urgencia==='alta'?1:0) - (a.urgencia==='alta'?1:0) || scoreClient(b) - scoreClient(a))
+    .slice(0, 8);
+  $('#dashAttention').innerHTML = list.length
+    ? list.map(clientCard).join('')
+    : emptyState('Nenhum cliente cadastrado. Toque no + para começar.');
+  attachCardHandlers('#dashAttention');
+}
+function kpi(variant, label, value, meta, key){
+  return `<div class="card kpi ${variant}" data-k="${key}">
+    <div class="label">${label}</div>
+    <div class="value">${value}</div>
+    <div class="meta">${meta}</div>
+  </div>`;
+}
+function emptyState(txt){
+  return `<div class="empty">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+    <div>${txt}</div></div>`;
+}
+
+/* ===================== Clientes ===================== */
+let pendingFilter = null;
+let pendingClientIds = null;
+let currentFilter = 'all';
+let advFilters = {};
+
+function renderClients(){
+  $('#clientCount').textContent = `${clients.length} cadastrados`;
+  if (pendingClientIds){
+    const ids = pendingClientIds; pendingClientIds = null;
+    const ordered = ids.map(id => clients.find(c => c.id === id)).filter(Boolean);
+    currentFilter = 'all'; advFilters = {};
+    $$('#chipsFilter .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === 'all'));
+    $('#clientList').innerHTML = ordered.length ? ordered.map(clientCard).join('') : emptyState('Nenhum cliente encontrado.');
+    attachCardHandlers('#clientList');
+    return;
+  }
+  if (pendingFilter){
+    currentFilter = pendingFilter;
+    pendingFilter = null;
+    const map = { 'urg-alta':'urg-alta','interesse-alto':'interesse-alto','quentes':'hot','d1':'d1','d7':'d7','d14':'d14','d30':'d30','comprou':'comprou','all':'all','prio':'hot' };
+    currentFilter = map[currentFilter] || 'all';
+    $$('#chipsFilter .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === currentFilter));
+  }
+  const q = $('#searchInput').value.trim().toLowerCase();
+  let list = clients.filter(c => {
+    if (q && !((c.name||'').toLowerCase().includes(q) || (c.product||'').toLowerCase().includes(q))) return false;
+    const d = daysSince(c.ultimoContato||c.dataCadastro);
+    const p = priorityLevel(c);
+    if (currentFilter==='hot' && p!=='hot') return false;
+    if (currentFilter==='mid' && p!=='mid') return false;
+    if (currentFilter==='low' && p!=='low') return false;
+    if (currentFilter==='urg-alta' && c.urgencia!=='alta') return false;
+    if (currentFilter==='interesse-alto' && c.statusVenda==='Comprou') return false;
+    if (currentFilter==='d1'  && (d!==1 || c.statusVenda==='Comprou')) return false;
+    if (currentFilter==='d7'  && d<7)  return false;
+    if (currentFilter==='d14' && d<14) return false;
+    if (currentFilter==='d30' && d<30) return false;
+    if (currentFilter==='comprou' && c.statusVenda!=='Comprou') return false;
+    if (advFilters.formaCompra && c.formaCompra !== advFilters.formaCompra) return false;
+    if (advFilters.temperatura && c.temperatura !== advFilters.temperatura) return false;
+    if (advFilters.objecao && c.objecao !== advFilters.objecao) return false;
+    if (advFilters.urgencia && c.urgencia !== advFilters.urgencia) return false;
+    if (advFilters.statusVenda && c.statusVenda !== advFilters.statusVenda) return false;
+    if (advFilters.diasMin != null && d < advFilters.diasMin) return false;
+    if (advFilters.tipo && c.tipo !== advFilters.tipo) return false;
+    if (advFilters.classificacao && c.classificacao !== advFilters.classificacao) return false;
+    if (advFilters.valorVistoMin != null && (Number(c.valorVisto)||0) < advFilters.valorVistoMin) return false;
+    if (advFilters.valorVistoMax != null && (Number(c.valorVisto)||0) > advFilters.valorVistoMax) return false;
+    if (advFilters.interesseMin != null && (Number(c.interesse)||0) < advFilters.interesseMin) return false;
+    if (advFilters.interesseMax != null && (Number(c.interesse)||0) > advFilters.interesseMax) return false;
+    if (currentFilter !== 'comprou' && c.statusVenda === 'Comprou') return false;
+    return true;
+  }).sort((a,b) => scoreClient(b) - scoreClient(a));
+  if (advFilters.valorVistoMin != null || advFilters.valorVistoMax != null ||
+      advFilters.interesseMin != null || advFilters.interesseMax != null ||
+      currentFilter === 'interesse-alto'){
+    list.sort((a,b) => (Number(b.interesse)||0) - (Number(a.interesse)||0));
+  }
+  const html = list.length ? list.map(clientCard).join('') : emptyState('Nenhum cliente encontrado.');
+  $('#clientList').innerHTML = html;
+  attachCardHandlers('#clientList');
+}
+$('#searchInput').addEventListener('input', renderClients);
+$$('#chipsFilter .chip').forEach(c => c.addEventListener('click', () => {
+  currentFilter = c.dataset.filter;
+  $$('#chipsFilter .chip').forEach(x => x.classList.toggle('active', x === c));
+  renderClients();
+}));
+
+function clientCard(c){
+  const s = scoreClient(c), cls = scoreClass(s), d = daysSince(c.ultimoContato||c.dataCadastro);
+  const p = priorityLevel(c);
+  const pIco = p==='hot'?'🔥':p==='mid'?'⚠️':'🟢';
+  const urgTag = c.urgencia ? `<span class="tag ${c.urgencia==='alta'?'hot':c.urgencia==='média'?'warn':'ok'}">${c.urgencia}</span>` : '';
+  const venda = c.statusVenda === 'Comprou' ? `<span class="tag ok">✓ Comprou</span>` : '';
+  return `<div class="client" data-id="${c.id}">
+    <div class="top">
+      <div style="min-width:0;flex:1">
+        <div class="name">${escapeHtml(c.name)}</div>
+        <div class="product">${escapeHtml(c.product||'—')}</div>
+      </div>
+      <span class="score-pill"><span class="dot" style="background:${cls.color}"></span>${s}</span>
+    </div>
+    <div class="meta">
+      <span class="tag">${pIco} ${cls.label}</span>
+      ${urgTag}
+      ${venda}
+      <span class="tag">${d>=999?'Sem contato':d+'d sem contato'}</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-whats" data-act="whats" data-id="${c.id}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.6 5.9L0 24l6.4-1.7c1.7.9 3.6 1.4 5.6 1.4 6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.4-8.3z"/></svg>
+        WhatsApp
+      </button>
+      <button class="btn btn-ghost" data-act="detail" data-id="${c.id}">Detalhes</button>
+    </div>
+  </div>`;
+}
+function attachCardHandlers(scope){
+  $$(`${scope} [data-act="whats"]`).forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    selectedRmClient = b.dataset.id;
+    go('remarketing');
+  }));
+  $$(`${scope} [data-act="detail"]`).forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    openDetail(b.dataset.id);
+  }));
+}
+
+/* ===================== Cadastro / Edição ===================== */
+function clientForm(c = {}){
+  const opt = (arr, val) => ['<option value="">—</option>', ...arr.map(o => `<option ${o===val?'selected':''}>${escapeHtml(o)}</option>`)].join('');
+  const interesse = c.interesse ?? 5;
+  const comissaoPercentual = c.comissaoPercentual ?? '';
+  return `
+    <div class="field"><label>Nome do cliente *</label><input id="f_name" value="${escapeHtml(c.name||'')}" required/></div>
+    <div class="field"><label>WhatsApp *</label><input id="f_whats" inputmode="tel" placeholder="(11) 99999-9999" value="${escapeHtml(c.whatsapp||'')}"/></div>
+    <div class="field"><label>Produto de interesse</label><input id="f_product" value="${escapeHtml(c.product||'')}"/></div>
+    <div class="field"><label>Valor Visto (R$)</label><input id="f_valorVisto" inputmode="decimal" placeholder="0,00" value="${c.valorVisto?String(c.valorVisto).replace('.',','):''}" pattern="[0-9.,]*"/><div class="hint">Apenas valores monetários.</div></div>
+    <div class="field"><label>Tipo de Imóvel</label><select id="f_tipo">${opt(tipo, c.tipo)}</select></div>
+    <div class="field"><label>Classificação do Imóvel</label><select id="f_classificacao">${opt(classificacao, c.classificacao)}</select></div>
+    <div class="field"><label>Interesse (1–10)</label>
+      <div class="slider-wrap">
+        <input id="f_interesse" type="range" min="1" max="10" value="${interesse}" oninput="document.getElementById('f_interesse_v').textContent=this.value"/>
+        <span class="slider-val" id="f_interesse_v">${interesse}</span>
+      </div>
+    </div>
+    <div class="field"><label>Urgência</label>
+      <div class="seg" id="f_urgencia">
+        ${URGENCIAS.map(u => `<button type="button" data-u="${u}" class="${c.urgencia===u?'active':''}">${u==='alta'?'🔥 Alta':u==='média'?'⚠️ Média':'🟢 Baixa'}</button>`).join('')}
+      </div>
+    </div>
+    <div class="field"><label>Forma de compra</label><select id="f_forma">${opt(formas, c.formaCompra)}</select></div>
+    <div class="field"><label>Temperatura emocional</label><select id="f_temp">${opt(TEMPERATURA, c.temperatura)}</select></div>
+    <div class="field"><label>Objeção principal</label><select id="f_obj">${opt(objecoes, c.objecao)}</select></div>
+    <div class="field"><label>Status da venda</label>
+      <div class="seg" id="f_statusVenda">
+        ${STATUS_VENDA.map(s => `<button type="button" data-s="${s}" class="${c.statusVenda===s?'active':''}">${s}</button>`).join('')}
+      </div>
+    </div>
+    <div class="field" id="f_vgvWrap" style="display:${c.statusVenda==='Comprou'?'block':'none'}">
+      <label>Valor da venda (VGV) — R$</label>
+      <input id="f_vgv" inputmode="decimal" placeholder="0,00" value="${c.vgv||''}"/>
+    </div>
+    <div class="field" id="f_comissaoWrap" style="display:${c.statusVenda==='Comprou'?'block':'none'}">
+      <label>Percentual de comissão</label>
+      <div class="commission-input-wrap">
+        <input id="f_comissao" inputmode="decimal" placeholder="0,00" value="${comissaoPercentual}" pattern="[0-9,]*"/>
+      </div>
+    </div>
+    <div class="field"><label>Observações da conversa</label><textarea id="f_obs">${escapeHtml(c.observacoes||'')}</textarea></div>
+  `;
+}
+function bindForm(c){
+  let urg = c.urgencia || '';
+  let statusVenda = c.statusVenda || 'Não comprou';
+  $$('#f_urgencia button').forEach(b => b.addEventListener('click', () => {
+    urg = b.dataset.u;
+    $$('#f_urgencia button').forEach(x => x.classList.toggle('active', x===b));
+  }));
+  $$('#f_statusVenda button').forEach(b => b.addEventListener('click', () => {
+    statusVenda = b.dataset.s;
+    $$('#f_statusVenda button').forEach(x => x.classList.toggle('active', x===b));
+    $('#f_vgvWrap').style.display = statusVenda === 'Comprou' ? 'block' : 'none';
+    $('#f_comissaoWrap').style.display = statusVenda === 'Comprou' ? 'block' : 'none';
+  }));
+  return () => ({
+    name: $('#f_name').value.trim(),
+    whatsapp: $('#f_whats').value.trim(),
+    product: $('#f_product').value.trim(),
+    tipo: $('#f_tipo').value,
+    classificacao: $('#f_classificacao').value,
+    interesse: Number($('#f_interesse').value),
+    urgencia: urg,
+    formaCompra: $('#f_forma').value,
+    temperatura: $('#f_temp').value,
+    objecao: $('#f_obj').value,
+    statusVenda,
+    vgv: statusVenda==='Comprou' ? Number(String($('#f_vgv').value).replace(/[^\d.,]/g,'').replace(',','.')) || 0 : 0,
+    comissaoPercentual: statusVenda==='Comprou' ? Number(String($('#f_comissao').value).replace(/[^\d.,]/g,'').replace(',','.')) || 0 : 0,
+    observacoes: $('#f_obs').value.trim(),
+    valorVisto: Number(String($('#f_valorVisto').value).replace(/[^\d.,]/g,'').replace(',','.')) || 0,
+  });
+}
+function openNewClient(){
+  openSheet('Novo cliente', clientForm(),
+    `<button class="btn btn-ghost" onclick="closeSheet()">Cancelar</button>
+     <button class="btn btn-primary" id="saveClient">Salvar</button>`);
+  const get = bindForm({});
+  $('#saveClient').addEventListener('click', () => {
+    const data = get();
+    if (!data.name) return toast('Nome é obrigatório');
+    const c = { id: uid(), dataCadastro: today(), ultimoContato: today(), historico: [], ...data };
+    clients.unshift(c);
+    save(LS.clients, clients);
+    closeSheet(); toast('Cliente cadastrado'); refreshAll();
+  });
+}
+function openEditClient(id){
+  const c = clients.find(x => x.id === id); if (!c) return;
+  openSheet('Editar cliente', clientForm(c),
+    `<button class="btn btn-danger" id="delClient">Excluir</button>
+     <button class="btn btn-primary" id="saveClient">Salvar</button>`);
+  const get = bindForm(c);
+  $('#saveClient').addEventListener('click', () => {
+    const data = get();
+    if (!data.name) return toast('Nome é obrigatório');
+    Object.assign(c, data, { ultimoContato: today() });
+    save(LS.clients, clients);
+    closeSheet(); toast('Atualizado'); refreshAll();
+  });
+  $('#delClient').addEventListener('click', () => {
+    if (!confirm('Excluir cliente?')) return;
+    clients = clients.filter(x => x.id !== id);
+    save(LS.clients, clients);
+    closeSheet(); toast('Excluído'); refreshAll();
+  });
+}
+
+/* ===================== Detalhes ===================== */
+function renderTimeline(c){
+  const items = [];
+  const fmt = iso => { const d = new Date(iso); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; };
+  const kindLabel = k => ({
+    'whatsapp':'WhatsApp enviado',
+    'visita':'Visitou imóvel',
+    'cadastro':'Lead cadastrado',
+    'objecao':'Registrou objeção',
+    'nota':'Nota adicionada'
+  }[k] || k);
+  (c.historico||[]).forEach(h => items.push({ at: h.at, label: kindLabel(h.kind) + (h.note?` — ${h.note}`:'') }));
+  if (c.objecao) items.push({ at: c.ultimoContato||c.dataCadastro, label: `Disse "${c.objecao}"` });
+  if (c.dataCadastro) items.push({ at: c.dataCadastro, label: 'Lead cadastrado' });
+  items.sort((a,b) => new Date(b.at) - new Date(a.at));
+  if (!items.length) return `<div class="hint">Sem histórico ainda.</div>`;
+  return `<ul class="timeline">${items.map(i => `<li><span class="tdate">${fmt(i.at)}</span><strong>—</strong>${escapeHtml(i.label)}</li>`).join('')}</ul>`;
+}
+function openDetail(id){
+  const c = clients.find(x => x.id === id); if (!c) return;
+  const s = scoreClient(c), cls = scoreClass(s), d = daysSince(c.ultimoContato||c.dataCadastro);
+  const comissaoValor = c.statusVenda==='Comprou' && c.vgv ? (Number(c.vgv) * (Number(c.comissaoPercentual)||0) / 100) : 0;
+  openSheet(c.name, `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <span class="score-pill" style="font-size:14px;padding:8px 14px"><span class="dot" style="background:${cls.color}"></span>${s} · ${cls.label}</span>
+      ${c.urgencia?`<span class="tag ${c.urgencia==='alta'?'hot':c.urgencia==='média'?'warn':'ok'}">${c.urgencia}</span>`:''}
+    </div>
+    <div class="card" style="margin-bottom:14px;padding:14px"><strong>${recommend(c)}</strong></div>
+    <div class="detail-section"><h3>Contato</h3>
+      <div class="row"><span class="lbl">WhatsApp</span><span class="val">${escapeHtml(c.whatsapp||'—')}</span></div>
+      <div class="row"><span class="lbl">Produto</span><span class="val">${escapeHtml(c.product||'—')}</span></div>
+      <div class="row"><span class="lbl">Interesse</span><span class="val">${c.interesse||'—'}/10</span></div>
+    </div>
+    <div class="detail-section"><h3>Imóvel</h3>
+      <div class="row"><span class="lbl">Tipo</span><span class="val">${escapeHtml(c.tipo||'—')}</span></div>
+      <div class="row"><span class="lbl">Classificação</span><span class="val">${escapeHtml(c.classificacao||'—')}</span></div>
+      <div class="row"><span class="lbl">Valor Visto</span><span class="val">${c.valorVisto?('R$ '+Number(c.valorVisto).toLocaleString('pt-BR',{minimumFractionDigits:2})):'—'}</span></div>
+    </div>
+    <div class="detail-section"><h3>Histórico</h3>
+      ${renderTimeline(c)}
+    </div>
+    <div class="detail-section"><h3>Perfil</h3>
+      <div class="row"><span class="lbl">Forma de compra</span><span class="val">${escapeHtml(c.formaCompra||'—')}</span></div>
+      <div class="row"><span class="lbl">Temperatura</span><span class="val">${escapeHtml(c.temperatura||'—')}</span></div>
+      <div class="row"><span class="lbl">Objeção</span><span class="val">${escapeHtml(c.objecao||'—')}</span></div>
+      <div class="row"><span class="lbl">Status venda</span><span class="val">${escapeHtml(c.statusVenda||'—')}${c.statusVenda==='Comprou'&&c.vgv?` · R$ ${Number(c.vgv).toLocaleString('pt-BR',{minimumFractionDigits:2})}`:''}</span></div>
+      ${c.statusVenda==='Comprou'&&c.comissaoPercentual?`<div class="row"><span class="lbl">Comissão</span><span class="val">${Number(c.comissaoPercentual).toLocaleString('pt-BR',{minimumFractionDigits:2})}% · R$ ${comissaoValor.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></div>`:''}
+    </div>
+    <div class="detail-section"><h3>Atividade</h3>
+      <div class="row"><span class="lbl">Cadastro</span><span class="val">${new Date(c.dataCadastro).toLocaleDateString('pt-BR')}</span></div>
+      <div class="row"><span class="lbl">Último contato</span><span class="val">${d>=999?'—':d+' dias atrás'}</span></div>
+    </div>
+    ${c.observacoes?`<div class="detail-section"><h3>Observações</h3><div class="card" style="white-space:pre-wrap;font-size:14px">${escapeHtml(c.observacoes)}</div></div>`:''}
+  `,
+  `<button class="btn btn-ghost" onclick="closeSheet();openEditClient('${id}')">Editar</button>
+   <button class="btn btn-whats" id="detailWhats">WhatsApp</button>`);
+  $('#detailWhats').addEventListener('click', () => {
+    selectedRmClient = id; closeSheet(); go('remarketing');
+  });
+}
+
+/* ===================== Filtro avançado ===================== */
+function parseMoneyBR(str){
+  if (str == null) return null;
+  let s = String(str).toLowerCase().trim();
+  if (!s) return null;
+  let mult = 1;
+  if (/\b(milh(ão|oes|ões)|mi|mm)\b/.test(s) || s.endsWith('m')) mult = 1_000_000;
+  else if (/\b(mil|k)\b/.test(s) || s.endsWith('k')) mult = 1_000;
+  s = s.replace(/r\$|reais?|milh(ão|oes|ões)|mi|mm|mil|k|m\b/g,' ').trim();
+  s = s.replace(/\s+/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');
+  const n = parseFloat(s);
+  if (!isFinite(n)) return null;
+  return n * mult;
+}
+$('#openAdv').addEventListener('click', () => {
+  const opt = (arr, val) => ['<option value="">Todos</option>', ...arr.map(o => `<option ${o===val?'selected':''}>${escapeHtml(o)}</option>`)].join('');
+  openSheet('Filtro avançado', `
+    <div class="field"><label>Forma de compra</label><select id="af_forma">${opt(formas, advFilters.formaCompra)}</select></div>
+    <div class="field"><label>Temperatura</label><select id="af_temp">${opt(TEMPERATURA, advFilters.temperatura)}</select></div>
+    <div class="field"><label>Objeção</label><select id="af_obj">${opt(objecoes, advFilters.objecao)}</select></div>
+    <div class="field"><label>Urgência</label><select id="af_urg">${opt(URGENCIAS, advFilters.urgencia)}</select></div>
+    <div class="field"><label>Tipo de Imóvel</label><select id="af_tipo">${opt(tipo, advFilters.tipo)}</select></div>
+    <div class="field"><label>Classificação do Imóvel</label><select id="af_classificacao">${opt(classificacao, advFilters.classificacao)}</select></div>
+    <div class="field"><label>Status da venda</label><select id="af_sv">${opt(STATUS_VENDA, advFilters.statusVenda)}</select></div>
+    <div class="field"><label>Dias sem contato (mínimo)</label>
+      <input id="af_dias" type="number" min="0" placeholder="Ex: 60, 90, 360" value="${advFilters.diasMin ?? ''}"/>
+      <div class="hint">Digite quantos dias atrás você quer ver.</div>
+    </div>
+    <div class="field"><label>Valor Visto — mínimo</label>
+      <input id="af_vvMin" inputmode="decimal" placeholder="Ex: 100 mil, 100000, 1.5 mi" value="${advFilters.valorVistoMin != null ? advFilters.valorVistoMin.toLocaleString('pt-BR') : ''}"/>
+    </div>
+    <div class="field"><label>Valor Visto — máximo</label>
+      <input id="af_vvMax" inputmode="decimal" placeholder="Ex: 200 mil, 200000, 2 mi" value="${advFilters.valorVistoMax != null ? advFilters.valorVistoMax.toLocaleString('pt-BR') : ''}"/>
+      <div class="hint">Aceita "mil", "k", "mi" ou "milhão". Resultados são ordenados por maior interesse.</div>
+    </div>
+    <div class="field"><label>Interesse — mínimo (0–10)</label>
+      <input id="af_intMin" type="number" min="0" max="10" placeholder="Ex: 7" value="${advFilters.interesseMin ?? ''}"/>
+    </div>
+    <div class="field"><label>Interesse — máximo (0–10)</label>
+      <input id="af_intMax" type="number" min="0" max="10" placeholder="Ex: 10" value="${advFilters.interesseMax ?? ''}"/>
+      <div class="hint">Filtre clientes pelo nível de interesse (0 a 10).</div>
+    </div>
+  `,
+  `<button class="btn btn-ghost" id="clearAdv">Limpar</button>
+   <button class="btn btn-primary" id="applyAdv">Aplicar</button>`);
+  $('#applyAdv').addEventListener('click', () => {
+    const parseInt010 = v => {
+      if (v === '' || v == null) return null;
+      const n = Number(v);
+      if (!isFinite(n)) return null;
+      return Math.max(0, Math.min(10, n));
+    };
+    advFilters = {
+      formaCompra: $('#af_forma').value || null,
+      temperatura: $('#af_temp').value || null,
+      objecao: $('#af_obj').value || null,
+      urgencia: $('#af_urg').value || null,
+      tipo: $('#af_tipo').value || null,
+      classificacao: $('#af_classificacao').value || null,
+      statusVenda: $('#af_sv').value || null,
+      diasMin: $('#af_dias').value ? Number($('#af_dias').value) : null,
+      valorVistoMin: parseMoneyBR($('#af_vvMin').value),
+      valorVistoMax: parseMoneyBR($('#af_vvMax').value),
+      interesseMin: parseInt010($('#af_intMin').value),
+      interesseMax: parseInt010($('#af_intMax').value),
+    };
+    Object.keys(advFilters).forEach(k => advFilters[k] == null && delete advFilters[k]);
+    closeSheet(); renderClients(); toast('Filtros aplicados');
+  });
+  $('#clearAdv').addEventListener('click', () => { advFilters = {}; closeSheet(); renderClients(); toast('Filtros limpos'); });
+});
+
+/* ===================== Remarketing ===================== */
+let selectedRmClient = null;
+function renderRemarketing(){
+  const sel = $('#rmClient');
+  sel.innerHTML = '<option value="">Escolher cliente...</option>' +
+    clients.map(c => `<option value="${c.id}" ${c.id===selectedRmClient?'selected':''}>${escapeHtml(c.name)} — ${escapeHtml(c.product||'')}</option>`).join('');
+  $('#rmMsg').value = config.msg;
+  renderTemplates();
+}
+$('#rmClient').addEventListener('change', e => selectedRmClient = e.target.value);
+$('#rmSave').addEventListener('click', () => {
+  config.msg = $('#rmMsg').value; save(LS.config, config); toast('Mensagem padrão salva');
+});
+$('#rmSend').addEventListener('click', () => sendWhats($('#rmMsg').value));
+
+function buildMessage(template, c){
+  const d = daysSince(c.ultimoContato||c.dataCadastro);
+  return template
+    .replace(/\{nome\}/g, (c.name||'').split(' ')[0] || '')
+    .replace(/\{produto\}/g, c.product || 'o que conversamos')
+    .replace(/\{dias\}/g, String(d>=999?0:d))
+    .replace(/\{score\}/g, String(scoreClient(c)));
+}
+function sendWhats(template){
+  if (!selectedRmClient) return toast('Selecione um cliente');
+  const c = clients.find(x => x.id === selectedRmClient); if (!c) return;
+  if (!c.whatsapp) return toast('Cliente sem WhatsApp');
+  const phone = c.whatsapp.replace(/\D/g,'');
+  const msg = encodeURIComponent(buildMessage(template, c));
+  c.ultimoContato = today();
+  (c.historico = c.historico || []).unshift({ at: today(), kind: 'whatsapp' });
+  save(LS.clients, clients);
+  window.open(`https://wa.me/${phone.startsWith('55')||phone.length<11?phone:'55'+phone}?text=${msg}`, '_blank');
+  toast('Abrindo WhatsApp...');
+}
+
+function renderTemplates(){
+  $('#templatesList').innerHTML = templates.map(t => `
+    <div class="template-card">
+      <div class="ttitle">${escapeHtml(t.title)}</div>
+      <div class="tbody">${escapeHtml(t.body)}</div>
+      <div class="tactions">
+        <button class="btn btn-ghost" data-tedit="${t.id}">Editar</button>
+        <button class="btn btn-whats" data-tsend="${t.id}">Enviar</button>
+      </div>
+    </div>`).join('');
+  $$('#templatesList [data-tedit]').forEach(b => b.addEventListener('click', () => editTemplate(b.dataset.tedit)));
+  $$('#templatesList [data-tsend]').forEach(b => b.addEventListener('click', () => {
+    const t = templates.find(x => x.id === b.dataset.tsend); if (t) sendWhats(t.body);
+  }));
+}
+$('#addTemplate').addEventListener('click', () => editTemplate(null));
+function editTemplate(id){
+  const t = id ? templates.find(x => x.id === id) : { id: uid(), title:'', body:'' };
+  openSheet(id?'Editar template':'Novo template', `
+    <div class="field"><label>Título</label><input id="tpl_title" value="${escapeHtml(t.title)}"/></div>
+    <div class="field"><label>Mensagem</label><textarea id="tpl_body" style="min-height:160px">${escapeHtml(t.body)}</textarea>
+      <div class="hint">Use {nome}, {produto}, {dias}, {score}.</div></div>
+  `, `${id?`<button class="btn btn-danger" id="tpl_del">Excluir</button>`:''}
+     <button class="btn btn-primary" id="tpl_save">Salvar</button>`);
+  $('#tpl_save').addEventListener('click', () => {
+    t.title = $('#tpl_title').value.trim() || 'Sem título';
+    t.body  = $('#tpl_body').value;
+    if (!id) templates.push(t);
+    save(LS.templates, templates);
+    closeSheet(); renderTemplates(); toast('Template salvo');
+  });
+  if (id) $('#tpl_del').addEventListener('click', () => {
+    templates = templates.filter(x => x.id !== id);
+    save(LS.templates, templates); closeSheet(); renderTemplates(); toast('Excluído');
+  });
+}
+
+/* ===================== Contatos (Nova aba) ===================== */
+function renderContatos(){
+  const naoCompradores = clients.filter(c => c.statusVenda !== 'Comprou');
+  $('#contatosList').innerHTML = naoCompradores.length
+    ? `<div class="card" style="padding:14px"><strong>Total de não-compradores:</strong> ${naoCompradores.length}</div>`
+    : emptyState('Todos os clientes já compraram!');
+}
+
+$('#exportInteresse').addEventListener('click', () => {
+  const naoCompradores = clients.filter(c => c.statusVenda !== 'Comprou');
+  if (!naoCompradores.length) return toast('Nenhum não-comprador para exportar');
+  
+  const interesses = Array.from({length:10}, (_,i) => i+1);
+  const opt = (arr, val) => ['<option value="">Todos</option>', ...arr.map(o => `<option ${o===val?'selected':''}>${o}</option>`)].join('');
+  
+  openSheet('Exportar por Interesse', `
+    <div class="field"><label>Selecione o Interesse</label><select id="sel_interesse">${opt(interesses, '')}</select></div>
+  `,
+  `<button class="btn btn-ghost" onclick="closeSheet()">Cancelar</button>
+   <button class="btn btn-primary" id="doExportInteresse">Exportar</button>`);
+  
+  $('#doExportInteresse').addEventListener('click', () => {
+    const sel = $('#sel_interesse').value;
+    let filtered = naoCompradores;
+    if (sel) filtered = naoCompradores.filter(c => Number(c.interesse) === Number(sel));
+    else filtered = naoCompradores.sort((a, b) => (Number(b.interesse)||0) - (Number(a.interesse)||0));
+    
+    if (!filtered.length) return toast('Nenhum contato encontrado');
+    
+    let txt = filtered.map(c => `${c.name}|${c.whatsapp}`).join('\n');
+    downloadTxt(txt, `contatos-interesse-${new Date().toISOString().slice(0,10)}.txt`);
+    closeSheet();
+    toast('Arquivo exportado com sucesso');
+  });
+});
+
+$('#exportUrgencia').addEventListener('click', () => {
+  const naoCompradores = clients.filter(c => c.statusVenda !== 'Comprou');
+  if (!naoCompradores.length) return toast('Nenhum não-comprador para exportar');
+  
+  const opt = (arr, val) => ['<option value="">Todos</option>', ...arr.map(o => `<option ${o===val?'selected':''}>${o}</option>`)].join('');
+  
+  openSheet('Exportar por Urgência', `
+    <div class="field"><label>Selecione a Urgência</label><select id="sel_urgencia">${opt(URGENCIAS, '')}</select></div>
+  `,
+  `<button class="btn btn-ghost" onclick="closeSheet()">Cancelar</button>
+   <button class="btn btn-primary" id="doExportUrgencia">Exportar</button>`);
+  
+  $('#doExportUrgencia').addEventListener('click', () => {
+    const sel = $('#sel_urgencia').value;
+    const urgenciaOrder = { 'alta': 0, 'média': 1, 'baixa': 2 };
+    let filtered = naoCompradores;
+    if (sel) filtered = naoCompradores.filter(c => c.urgencia === sel);
+    else filtered = naoCompradores.sort((a, b) => {
+      const urgA = urgenciaOrder[a.urgencia] ?? 999;
+      const urgB = urgenciaOrder[b.urgencia] ?? 999;
+      if (urgA !== urgB) return urgA - urgB;
+      return (Number(b.interesse)||0) - (Number(a.interesse)||0);
+    });
+    
+    if (!filtered.length) return toast('Nenhum contato encontrado');
+    
+    let txt = filtered.map(c => `${c.name}|${c.whatsapp}`).join('\n');
+    downloadTxt(txt, `contatos-urgencia-${new Date().toISOString().slice(0,10)}.txt`);
+    closeSheet();
+    toast('Arquivo exportado com sucesso');
+  });
+});
+
+$('#exportTipo').addEventListener('click', () => {
+  const naoCompradores = clients.filter(c => c.statusVenda !== 'Comprou');
+  if (!naoCompradores.length) return toast('Nenhum não-comprador para exportar');
+  
+  const opt = (arr, val) => ['<option value="">Todos</option>', ...arr.map(o => `<option ${o===val?'selected':''}>${o}</option>`)].join('');
+  
+  openSheet('Exportar por Tipo', `
+    <div class="field"><label>Selecione o Tipo</label><select id="sel_tipo">${opt(tipo, '')}</select></div>
+  `,
+  `<button class="btn btn-ghost" onclick="closeSheet()">Cancelar</button>
+   <button class="btn btn-primary" id="doExportTipo">Exportar</button>`);
+  
+  $('#doExportTipo').addEventListener('click', () => {
+    const sel = $('#sel_tipo').value;
+    let filtered = naoCompradores;
+    if (sel) filtered = naoCompradores.filter(c => c.tipo === sel);
+    
+    if (!filtered.length) return toast('Nenhum contato encontrado');
+    
+    let txt = filtered.map(c => `${c.name}|${c.whatsapp}`).join('\n');
+    downloadTxt(txt, `contatos-tipo-${new Date().toISOString().slice(0,10)}.txt`);
+    closeSheet();
+    toast('Arquivo exportado com sucesso');
+  });
+});
+
+$('#exportClassificacao').addEventListener('click', () => {
+  const naoCompradores = clients.filter(c => c.statusVenda !== 'Comprou');
+  if (!naoCompradores.length) return toast('Nenhum não-comprador para exportar');
+  
+  const opt = (arr, val) => ['<option value="">Todos</option>', ...arr.map(o => `<option ${o===val?'selected':''}>${o}</option>`)].join('');
+  
+  openSheet('Exportar por Classificação', `
+    <div class="field"><label>Selecione a Classificação</label><select id="sel_classificacao">${opt(classificacao, '')}</select></div>
+  `,
+  `<button class="btn btn-ghost" onclick="closeSheet()">Cancelar</button>
+   <button class="btn btn-primary" id="doExportClassificacao">Exportar</button>`);
+  
+  $('#doExportClassificacao').addEventListener('click', () => {
+    const sel = $('#sel_classificacao').value;
+    let filtered = naoCompradores;
+    if (sel) filtered = naoCompradores.filter(c => c.classificacao === sel);
+    
+    if (!filtered.length) return toast('Nenhum contato encontrado');
+    
+    let txt = filtered.map(c => `${c.name}|${c.whatsapp}`).join('\n');
+    downloadTxt(txt, `contatos-classificacao-${new Date().toISOString().slice(0,10)}.txt`);
+    closeSheet();
+    toast('Arquivo exportado com sucesso');
+  });
+});
+
+function downloadTxt(content, filename){
+  const blob = new Blob([content], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ===================== Configurações ===================== */
+function renderConfig(){
+  $('#cfgCompany').value = config.company;
+  $('#cfgMsg').value = config.msg;
+  $$('#cfgTheme button').forEach(b => b.classList.toggle('active', b.dataset.t === config.theme));
+  renderEditableList('formaCompra', formas);
+  renderEditableList('objecao', objecoes);
+  renderEditableList('tipo', tipo);
+  renderEditableList('classificacao', classificacao);
+}
+$('#cfgCompany').addEventListener('input', e => { config.company = e.target.value; save(LS.config, config); });
+$('#cfgMsg').addEventListener('input', e => { config.msg = e.target.value; save(LS.config, config); });
+$$('#cfgTheme button').forEach(b => b.addEventListener('click', () => {
+  config.theme = b.dataset.t; save(LS.config, config); applyTheme();
+  $$('#cfgTheme button').forEach(x => x.classList.toggle('active', x===b));
+}));
+$('#themeToggle').addEventListener('click', () => {
+  config.theme = config.theme === 'dark' ? 'light' : 'dark';
+  save(LS.config, config); applyTheme();
+});
+function applyTheme(){ document.documentElement.setAttribute('data-theme', config.theme); }
+
+function renderEditableList(kind, arr){
+  const elMap = {
+    'formaCompra': '#listFormaCompra',
+    'objecao': '#listObjecao',
+    'tipo': '#listTipo',
+    'classificacao': '#listClassificacao'
+  };
+  const elId = elMap[kind];
+  $(elId).innerHTML = arr.map((v,i) => `
+    <div class="item">
+      <span>${escapeHtml(v)}</span>
+      <button data-rm="${i}">×</button>
+    </div>`).join('') || `<div class="empty" style="padding:20px">Nenhum item.</div>`;
+  $$(`${elId} [data-rm]`).forEach(b => b.addEventListener('click', () => {
+    const i = Number(b.dataset.rm);
+    if (kind==='formaCompra'){ formas.splice(i,1); save(LS.formas, formas); }
+    else if (kind==='objecao'){ objecoes.splice(i,1); save(LS.objecoes, objecoes); }
+    else if (kind==='tipo'){ tipo.splice(i,1); save(LS.tipo, tipo); }
+    else if (kind==='classificacao'){ classificacao.splice(i,1); save(LS.classificacao, classificacao); }
+    renderConfig();
+  }));
+}
+$$('[data-add]').forEach(b => b.addEventListener('click', () => {
+  const kind = b.dataset.add;
+  const prompts = {
+    'formaCompra': 'Nova forma de compra:',
+    'objecao': 'Nova objeção:',
+    'tipo': 'Novo tipo de imóvel:',
+    'classificacao': 'Nova classificação:'
+  };
+  const v = prompt(prompts[kind] || 'Novo item:');
+  if (!v) return;
+  if (kind==='formaCompra'){ formas.push(v); save(LS.formas, formas); }
+  else if (kind==='objecao'){ objecoes.push(v); save(LS.objecoes, objecoes); }
+  else if (kind==='tipo'){ tipo.push(v); save(LS.tipo, tipo); }
+  else if (kind==='classificacao'){ classificacao.push(v); save(LS.classificacao, classificacao); }
+  renderConfig();
+}));
+
+/* Backup */
+$('#btnExport').addEventListener('click', () => {
+  const data = { clients, templates, config, formas, objecoes, tipo, classificacao, version:1, exportedAt: today() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `remarktop-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('Backup exportado');
+});
+$('#btnImport').addEventListener('click', () => $('#fileImport').click());
+$('#fileImport').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try{
+    const data = JSON.parse(await f.text());
+    if (data.clients) { clients = data.clients; save(LS.clients, clients); }
+    if (data.templates) { templates = data.templates; save(LS.templates, templates); }
+    if (data.config) { config = {...config, ...data.config}; save(LS.config, config); }
+    if (data.formas) { formas = data.formas; save(LS.formas, formas); }
+    if (data.objecoes) { objecoes = data.objecoes; save(LS.objecoes, objecoes); }
+    if (data.tipo) { tipo = data.tipo; save(LS.tipo, tipo); }
+    if (data.classificacao) { classificacao = data.classificacao; save(LS.classificacao, classificacao); }
+    toast('Backup importado'); refreshAll();
+  } catch(err){ toast('Arquivo inválido'); }
+  e.target.value = '';
+});
+$('#btnClear').addEventListener('click', () => {
+  if (!confirm('Apagar TODOS os dados? Não pode ser desfeito.')) return;
+  Object.values(LS).forEach(k => localStorage.removeItem(k));
+  clients=[]; templates=DEFAULTS.templates.slice(); config={...DEFAULTS.config}; formas=DEFAULTS.formas.slice(); objecoes=DEFAULTS.objecoes.slice(); tipo=DEFAULTS.tipo.slice(); classificacao=DEFAULTS.classificacao.slice();
+  toast('Dados apagados'); applyTheme(); refreshAll();
+});
+
+/* ===================== FAB & boot ===================== */
+$('#fab').addEventListener('click', openNewClient);
+function refreshAll(){ renderDashboard(); renderClients(); renderRemarketing(); renderContatos(); renderConfig(); }
+applyTheme(); refreshAll();
+</script>
+</body>
+</html>
